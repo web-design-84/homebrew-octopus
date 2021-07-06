@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+. ~/commands/octopus/inc/init.sh
+. ~/commands/octopus/inc/destroy.sh
+. ~/commands/octopus/inc/help.sh
+. ~/commands/octopus/inc/version.sh
+
+while getopts vh:p:-: OPT; do
+  case $OPT in
+  v) octopus_version ;;
+  -)
+    case "${OPTARG}" in
+    help) octopus_help ;;
+    esac
+    ;;
+  esac
+done
+
+subcommand="$1"
+
+case $subcommand in
+init) octopus_init ;;
+destroy) octopus_destroy ;;
+*)
+  echo "ヘルプを参照するには、 'octopus --help' を実行してください。"
+  exit 1
+  ;;
+esac
