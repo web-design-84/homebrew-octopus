@@ -206,6 +206,38 @@ function octopus_destroy() {
 }
 
 #-------------------------------
+# octopus テーマをzipでダウンロードする
+#-------------------------------
+
+function octopus_download() {
+  # GitHubホスト名の確認＆登録
+  local github_ssh_host=$(git config --global ssh.host)
+  if [[ -z $github_ssh_host ]]; then
+    echo -n 'WEB DESIGN 84 GitHub SSH Host > '
+    read github_ssh_host
+    if [ -z "$github_ssh_host" ]; then
+      echo 'GitHubのSSHホスト名（~/.ssh/config に記述）を入力してください。'
+      exit 1
+    elif [[ ! $(grep $github_ssh_host ~/.ssh/config) ]]; then
+      echo '~/.ssh/config にホストが登録されていません。'
+      exit 1
+    fi
+    git config --global ssh.host $github_ssh_host
+  fi
+
+  # tmp ファイルへ octopus をクローン
+  mkdir octopus-tmp && cd octopus-tmp
+  git clone ${github_ssh_host}:web-design-84/octopus.git octopus-all
+
+  # テーマファイルのみ抽出し、zipファイルを ~/Downloadsに生成
+  mv octopus-all/wp-content/themes/octopus/ .
+  rm -rf octopus-all
+  zip -r octopus-theme.zip octopus/
+  mv -f octopus-theme.zip ~/Downloads
+  cd ../ && rm -rf octopus-tmp
+}
+
+#-------------------------------
 # octopus コマンドのヘルプを表示する
 #-------------------------------
 
@@ -229,7 +261,7 @@ function octopus_help() {
 #-------------------------------
 
 function octopus_version() {
-  echo 'version 1.0.1'
+  echo 'version 1.1.1'
   exit
 }
 
@@ -253,6 +285,7 @@ subcommand="$1"
 case $subcommand in
 init) octopus_init ;;
 destroy) octopus_destroy ;;
+download) octopus_download ;;
 *)
   echo "ヘルプを参照するには、 'octopus --help' を実行してください。"
   exit 1
