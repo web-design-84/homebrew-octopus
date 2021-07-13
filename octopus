@@ -31,6 +31,13 @@ function octopus_init() {
     exit 1
   fi
 
+  if [[ ! $(command -v pnpm) ]]; then
+    echo 'octopus コマンドを実行するには、 pnpm が必要です。'
+    echo '下記コマンドを実行し、 pnpm をインストールしてください。\n'
+    echo 'brew install pnpm\n'
+    exit 1
+  fi
+
   # GitHubホスト名の確認＆登録
   if [ -z $(git config --global ssh.host) ]; then
     echo -n 'WEB DESIGN 84 GitHub SSH Host > '
@@ -119,7 +126,7 @@ function octopus_init() {
 
   # 初期設定
   cd dev && rm -rf .git && mkdir {sql/db_data,mailhog}
-  yarn
+  pnpm i
 
   # .env の書き換え
   sed -i '' -e "s/^PRODUCTION_NAME=.*$/PRODUCTION_NAME=$project_name/" -e "s/^SITE_TITLE=.*$/SITE_TITLE='$site_title'/" -e "s/^DOMAIN=.*$/DOMAIN='$domain'/" -e "s/^HOST_IP=.*$/HOST_IP=$ip/" .env
