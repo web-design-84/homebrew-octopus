@@ -252,8 +252,9 @@ function octopus_help() {
   echo '
   ■ Sub commands
   ━━━━━━━━━━━━━━━━
-  init      Octopusプロジェクトの作成
-  destroy   Octopusプロジェクトの破棄
+  init      ~/projects へOctopusプロジェクトを作成する
+  destroy   ~/projects のOctopusプロジェクトを破棄する
+  download  ~/Downloads へ最新バージョンのOctopusテーマをダウンロードする
 
   ■ Options
   ━━━━━━━━━━━━━━━━
@@ -268,7 +269,7 @@ function octopus_help() {
 #-------------------------------
 
 function octopus_version() {
-  echo 'version 1.1.1'
+  echo 'version 1.1.3'
   exit
 }
 
